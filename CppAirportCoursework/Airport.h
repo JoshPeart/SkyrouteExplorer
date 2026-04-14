@@ -8,7 +8,7 @@ struct Airport {
 	string ident;
 	string type;
 	string name;
-	string elevation_ft;
+	int elevation_ft;
 	string continent;
 	string iso_country;
 	string iso_region;
@@ -17,8 +17,8 @@ struct Airport {
 	string iata_code;
 	string gps_code;
 	string local_code;
-	string latitude;
-	string longitude;
+	double latitude;
+	double longitude;
 };
 
 #endif

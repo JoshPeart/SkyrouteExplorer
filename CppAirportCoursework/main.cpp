@@ -56,7 +56,7 @@ int main()
             default: cout << "\nInvalid option.Try again.\n";
         }
 
-    } while (choice != 8);
+    } while (choice != 8); // Closes program on the number 8
 
     return 0;
 }

@@ -27,7 +27,8 @@ void AirportManager::loadAirports(vector<Airport>& airports) {
             getline(ss, a.type, ',');
             getline(ss, a.name, ',');
 
-            getline(ss, a.elevation_ft, ',');
+            getline(ss, temp, ','); 
+            a.elevation_ft = temp.empty() ? 0 : stoi(temp);
 
             getline(ss, a.continent, ',');
             getline(ss, a.iso_country, ',');
@@ -38,10 +39,10 @@ void AirportManager::loadAirports(vector<Airport>& airports) {
             getline(ss, a.gps_code, ',');
             getline(ss, a.local_code, ',');
 
-            getline(ss, a.latitude, ',');
-            getline(ss, a.longitude, ',');
-
-
+            getline(ss, temp, ',');
+            a.latitude = temp.empty() ? 0.0 : stod(temp);
+            getline(ss, temp, ',');
+            a.longitude = temp.empty() ? 0.0 : stod(temp);
 
             airports.push_back(a);
         }
@@ -132,12 +133,13 @@ void AirportManager::countByType(const vector<Airport>& airports) {
 // ----- ADD AIRPORT -----
 void AirportManager::addAirport(vector<Airport>& airports) {
     Airport a;
-
+    string input;
 
     try {
 
-        cout << "Ident: ";
+        cout << "Ident (local code): ";
         getline(cin, a.ident);
+        getline(cin, a.local_code);
 
         cout << "Type (e.g. large_airport): ";
         getline(cin, a.type);
@@ -146,39 +148,37 @@ void AirportManager::addAirport(vector<Airport>& airports) {
         getline(cin, a.name);
 
         cout << "Elevation (ft): ";
-        cin >> a.elevation_ft;
+        getline(cin, input);
+        a.elevation_ft = stoi(input);
 
-        cout << "Continent: ";
-        cin >> a.continent;
+        cout << "Continent (e.g. EU, NA): ";
+        getline(cin, a.continent);
 
         cout << "Country Code (e.g. GB, US): ";
-        cin >> a.iso_country;
+        getline(cin, a.iso_country);
 
         cout << "Region: ";
-        cin >> a.iso_region;
-
-        cin.ignore();
+        getline(cin, a.iso_region);
 
         cout << "Municipality: ";
         getline(cin, a.municipality);
 
         cout << "ICAO Code: ";
-        cin >> a.icao_code;
+        getline(cin, a.icao_code);
 
         cout << "IATA Code: ";
-        cin >> a.iata_code;
+        getline(cin, a.iata_code);
 
         cout << "GPS Code: ";
-        cin >> a.gps_code;
-
-        cout << "Local Code: ";
-        cin >> a.local_code;
+        getline(cin, a.gps_code);
 
         cout << "Latitude: ";
-        cin >> a.latitude;
+        getline(cin, input);
+        a.latitude = stod(input);
 
         cout << "Longitude: ";
-        cin >> a.longitude;
+        getline(cin, input);
+        a.longitude = stod(input);
 
     }
     catch (...) {
