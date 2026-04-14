@@ -299,8 +299,7 @@ void saveAirports(const vector<Airport>& airports) {
             << airports[i].iata_code << ","
             << airports[i].gps_code << ","
             << airports[i].local_code << ","
-            << airports[i].latitude << ","
-            << airports[i].longitude << ",";
+            << "\"" << airports[i].latitude << "," << airports[i].longitude << "\"" << "\n";
     }
     
 
