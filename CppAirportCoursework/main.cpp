@@ -33,7 +33,7 @@ void searchByName(const vector<Airport>& airports);
 void searchByIATA(const vector<Airport>& airports); 
 
 void countByType(const vector<Airport>& airports); 
-void addAirport(const vector<Airport>& airports);
+void addAirport(vector<Airport>& airports);
 void saveAirports(const vector<Airport>& airports);
 
 
@@ -56,7 +56,8 @@ int main()
         cout << "4. Count airports by type\n";
         cout << "5. Add a new airport\n";
         cout << "6. Advanced options(radius search, nearest airport, high / low elevation, etc.)\n";
-        cout << "7. Save & Exit\n";
+        cout << "7. Save airports\n";
+        cout << "8. Exit\n";
         cout << "==========================================\n";
         cout << "Enter choice: ";
 
@@ -76,12 +77,13 @@ int main()
             case 3: searchByIATA(airports); break;
             case 4: countByType(airports); break;
             case 5: addAirport(airports); break;
-            case 6: cout << "\nAdvanced options coming soon.\n\n"; break;
+            case 6: cout << "\nAdvanced options coming soon.\n"; break;
             case 7: saveAirports(airports); break;
-            default: cout << "\nInvalid option.Try again.\n\n";
+            case 8: cout << "Exiting program...\n"; break;
+            default: cout << "\nInvalid option.Try again.\n";
         }
 
-    } while (choice != 7);
+    } while (choice != 8);
 
     return 0;
 }
@@ -211,7 +213,97 @@ void countByType(const vector<Airport>& airports) {
 }
 
 // ----- ADD AIRPORT -----
-void addAirport(const vector<Airport>& airports) {}
+void addAirport(vector<Airport>& airports) {
+    Airport a;
+
+
+    try {
+
+        cout << "Ident: ";
+        getline(cin, a.ident);
+
+        cout << "Type (e.g. large_airport): ";
+        getline(cin, a.type);
+
+        cout << "Name: ";
+        getline(cin, a.name);
+
+        cout << "Elevation (ft): ";
+        cin >> a.elevation_ft;
+
+        cout << "Continent: ";
+        cin >> a.continent;
+
+        cout << "Country Code (e.g. GB, US): ";
+        cin >> a.iso_country;
+
+        cout << "Region: ";
+        cin >> a.iso_region;
+
+        cin.ignore();
+
+        cout << "Municipality: ";
+        getline(cin, a.municipality);
+
+        cout << "ICAO Code: ";
+        cin >> a.icao_code;
+
+        cout << "IATA Code: ";
+        cin >> a.iata_code;
+
+        cout << "GPS Code: ";
+        cin >> a.gps_code;
+
+        cout << "Local Code: ";
+        cin >> a.local_code;
+
+        cout << "Latitude: ";
+        cin >> a.latitude;
+
+        cout << "Longitude: ";
+        cin >> a.longitude;
+
+    }
+    catch (...) {
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid input. Airport not added.\n";
+        return;
+    }
+
+    airports.push_back(a);
+    cout << "Airport added successfully.\n";
+}
 
 // ----- SAVE -----
-void saveAirports(const vector<Airport>& airports) {}
+void saveAirports(const vector<Airport>& airports) {
+    ofstream file("airports.csv");
+
+    if (!file.is_open()) {
+        cout << "Error saving file.\n";
+        return;
+    }
+
+    file << "ident,type,name,elevation_ft,continent,iso_country,iso_region,municipality,icao_code,iata_code,gps_code,local_code,coordinates\n";
+    
+    for (int i = 0; i < airports.size(); i++) {
+        file << airports[i].ident << ","
+            << airports[i].type << ","
+            << airports[i].name << ","
+            << airports[i].elevation_ft << ","
+            << airports[i].continent << ","
+            << airports[i].iso_country << ","
+            << airports[i].iso_region << ","
+            << airports[i].municipality << ","
+            << airports[i].icao_code << ","
+            << airports[i].iata_code << ","
+            << airports[i].gps_code << ","
+            << airports[i].local_code << ","
+            << airports[i].latitude << ","
+            << airports[i].longitude << ",";
+    }
+    
+
+    file.close();
+    cout << "Saved to airports_updated.csv\n";
+}
