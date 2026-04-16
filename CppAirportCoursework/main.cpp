@@ -28,7 +28,7 @@ int main()
         cout << "3. Search by IATA code\n";
         cout << "4. Count airports by type\n";
         cout << "5. Add a new airport\n";
-        cout << "6. Advanced options(radius search, nearest airport, high / low elevation, etc.)\n";
+        cout << "6. Advanced options\n";
         cout << "7. Save airports\n";
         cout << "8. Exit\n";
         cout << "==========================================\n";

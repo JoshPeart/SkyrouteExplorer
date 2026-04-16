@@ -18,6 +18,18 @@ void AirportManager::loadAirports(vector<Airport>& airports) {
     getline(file, line); // skip header
 
     while (getline(file, line)) {
+        
+        bool inQuotes = false;
+        for (char& c : line) {
+            if (c == '"') {
+                inQuotes = !inQuotes;
+                c = ' '; 
+            }
+            else if (c == ',' && inQuotes) {
+                c = ';'; 
+            }
+        }
+        
         stringstream ss(line);
         Airport a;
         string temp;
@@ -41,6 +53,7 @@ void AirportManager::loadAirports(vector<Airport>& airports) {
 
             getline(ss, temp, ',');
             a.latitude = temp.empty() ? 0.0 : stod(temp);
+
             getline(ss, temp, ',');
             a.longitude = temp.empty() ? 0.0 : stod(temp);
 
