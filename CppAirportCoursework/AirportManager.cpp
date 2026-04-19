@@ -2,10 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 // ------ LOAD CSV ------
 
-void AirportManager::loadAirports(vector<Airport>& airports) {
+void AirportManager::loadAirports() {
     ifstream file("airports.csv");
     string line;
 
@@ -64,58 +65,87 @@ void AirportManager::loadAirports(vector<Airport>& airports) {
             cout << "Warning: skipped an invalid row in CSV.\n";
         }
     }
+
+    file.close();
+    cout << "Airports loaded: " << airports.size() << endl;
 }
 
 // ------ PRINT -----
-void AirportManager::printAirport(const Airport& a) {
-    cout << "----------------------------------\n";
-    cout << "ID: " << a.ident << endl;
-    cout << "Name: " << a.name << endl;
-    cout << "Continent: " << a.continent << endl;
-    cout << "Type: " << a.type << endl;
-    cout << "Elevation (ft): " << a.elevation_ft << endl;
-    cout << "Coordinates: " << a.latitude << ", " << a.longitude << endl;
+void AirportManager::dataSorting() {
+    int choice;
+
+    do {
+        cout << "\n====== Data Sorting ======\n";
+        cout << "1. Sort by name\n";
+        cout << "2. Sort by country\n";
+        cout << "3. Sort by type\n";
+        cout << "4. Sort by latitude / longitude\n";
+        cout << "5. Sort by elevation\n";
+        cout << "6. Exit to Main Menu\n";
+        cout << "============================\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+        cin.ignore();
+
+        switch (choice) {
+        case 1: sortByName(); printFirstN(5); break;
+        case 2: sortByCountry(); printFirstN(5); break;
+        case 3: sortByType(); printFirstN(5); break;
+        case 4: sortByLatLon(); printFirstN(5); break;
+        case 5: sortByElevation(); printFirstN(5); break;
+        case 6: cout << "Going Back...\n"; break;
+        default: cout << "\nInvalid option.Try again.\n";
+        }
+
+    } while (choice != 6);
 }
 
 // ----- SEARCH -----
-void AirportManager::searchByCountry(const vector<Airport>& airports) {
+void AirportManager::searchByCountry() {
     string country;
     cout << "Enter country code (e.g. GB, US): ";
     getline(cin, country);
 
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].iso_country == country) {
-            printAirport(airports[i]);
+            airports[i].print();
         }
     }
 }
 
-void AirportManager::searchByName(const vector<Airport>& airports) {
+void AirportManager::searchByName() {
     string Name;
     cout << "Enter flight name: ";
     getline(cin, Name);
 
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].name.find(Name) != string::npos) {
-            printAirport(airports[i]);
+            airports[i].print();
         }
     }
 }
 
-void AirportManager::searchByIATA(const vector<Airport>& airports) {
+void AirportManager::searchByIATA() {
     string IATA;
     cout << "Enter IATA code: ";
     getline(cin, IATA);
 
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].iata_code == IATA) {
-            printAirport(airports[i]);
+            airports[i].print();
         }
     }
 }
 
 // ----- COUNT BY TYPE -----
-void AirportManager::countByType(const vector<Airport>& airports) {
+void AirportManager::countByType() {
     vector<string> types;
     vector<int> counts;
 
@@ -144,7 +174,7 @@ void AirportManager::countByType(const vector<Airport>& airports) {
 }
 
 // ----- ADD AIRPORT -----
-void AirportManager::addAirport(vector<Airport>& airports) {
+void AirportManager::addAirport() {
     Airport a;
     string input;
 
@@ -206,7 +236,7 @@ void AirportManager::addAirport(vector<Airport>& airports) {
 }
 
 // ----- SAVE -----
-void AirportManager::saveAirports(const vector<Airport>& airports) {
+void AirportManager::saveAirports() {
     ofstream file("airports.csv");
 
     if (!file.is_open()) {
@@ -235,4 +265,47 @@ void AirportManager::saveAirports(const vector<Airport>& airports) {
 
     file.close();
     cout << "Saved to airports_updated.csv\n";
+}
+
+void AirportManager::sortByName() {
+    sort(airports.begin(), airports.end(), // sorts whole vector
+        [](Airport a, Airport b) { return a.name < b.name; }); // comparator
+    // checks if a is alphabetically less than b
+}
+
+void AirportManager::sortByCountry() {
+    sort(airports.begin(), airports.end(), 
+        [](Airport a, Airport b) { return a.iso_country < b.iso_country; }); 
+}
+
+void AirportManager::sortByType() {
+    sort(airports.begin(), airports.end(),
+        [](Airport a, Airport b) { return a.type < b.type; }); 
+}
+
+void AirportManager::sortByLatLon() {
+    int choice;
+
+    cout << "Latitude (1) or Longitude (2): ";
+    cin >> choice;
+
+    if (choice == 1) {
+        sort(airports.begin(), airports.end(),
+            [](Airport a, Airport b) { return a.latitude < b.latitude; }); 
+    }
+    else if (choice == 2) {
+        sort(airports.begin(), airports.end(), 
+            [](Airport a, Airport b) { return a.longitude < b.longitude; }); 
+    }
+}
+
+void AirportManager::sortByElevation() {
+    sort(airports.begin(), airports.end(),
+        [](Airport a, Airport b) { return a.elevation_ft < b.elevation_ft; });
+}
+
+void AirportManager::printFirstN(int n) {
+    for (int i = 0; i < n && i < airports.size(); i++) {
+        airports[i].print();
+    }
 }

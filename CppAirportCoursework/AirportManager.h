@@ -11,16 +11,24 @@ private:
 public:
 
 	// ------ FUNCTION DECLERATIONS ------
-	void loadAirports(vector<Airport>& airports);
-	void printAirport(const Airport& a);
+	void loadAirports();
+	void dataSorting();
 
-	void searchByCountry(const vector<Airport>& airports);
-	void searchByName(const vector<Airport>& airports);
-	void searchByIATA(const vector<Airport>& airports);
+	void searchByCountry();
+	void searchByName();
+	void searchByIATA();
 
-	void countByType(const vector<Airport>& airports);
-	void addAirport(vector<Airport>& airports);
-	void saveAirports(const vector<Airport>& airports);
+	void countByType();
+	void addAirport();
+	void saveAirports();
+
+	void sortByName();
+	void sortByCountry();
+	void sortByType();
+	void sortByLatLon();
+	void sortByElevation();
+
+	void printFirstN(int n);
 };
 
 #endif

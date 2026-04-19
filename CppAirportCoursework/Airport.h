@@ -4,7 +4,8 @@
 #include <string>
 using namespace std;
 
-struct Airport {
+class Airport {
+public:
 	string ident;
 	string type;
 	string name;
@@ -19,6 +20,9 @@ struct Airport {
 	string local_code;
 	double latitude;
 	double longitude;
+
+	Airport();
+	void print() const;
 };
 
 #endif
