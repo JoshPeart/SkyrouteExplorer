@@ -52,7 +52,7 @@ void AirportManager::loadAirports() {
             getline(ss, a.gps_code, ',');
             getline(ss, a.local_code, ',');
 
-            getline(ss, temp, ',');
+            getline(ss, temp, ';');
             a.latitude = temp.empty() ? 0.0 : stod(temp);
 
             getline(ss, temp, ',');
@@ -75,13 +75,14 @@ void AirportManager::dataSorting() {
     int choice;
 
     do {
-        cout << "\n====== Data Sorting ======\n";
+        cout << "\n====== Advanced Options ======\n";
         cout << "1. Sort by name\n";
         cout << "2. Sort by country\n";
         cout << "3. Sort by type\n";
         cout << "4. Sort by latitude / longitude\n";
         cout << "5. Sort by elevation\n";
-        cout << "6. Exit to Main Menu\n";
+        cout << "6. Find distance between airports\n";
+        cout << "7. Exit to Main Menu\n";
         cout << "============================\n";
         cout << "Enter choice: ";
         cin >> choice;
@@ -100,11 +101,12 @@ void AirportManager::dataSorting() {
         case 3: sortByType(); printFirstN(5); break;
         case 4: sortByLatLon(); printFirstN(5); break;
         case 5: sortByElevation(); printFirstN(5); break;
-        case 6: cout << "Going Back...\n"; break;
+        case 6: FindDistance(); break;
+        case 7: cout << "Going Back...\n"; break;
         default: cout << "\nInvalid option.Try again.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 }
 
 // ----- SEARCH -----
@@ -267,9 +269,11 @@ void AirportManager::saveAirports() {
     cout << "Saved to airports_updated.csv\n";
 }
 
+// ------- DATA SORTING --------
+
 void AirportManager::sortByName() {
     sort(airports.begin(), airports.end(), // sorts whole vector
-        [](Airport a, Airport b) { return a.name < b.name; }); // comparator
+        [](const Airport& a, const Airport& b) { return a.name < b.name; }); // comparator
     // checks if a is alphabetically less than b
 }
 
@@ -308,4 +312,65 @@ void AirportManager::printFirstN(int n) {
     for (int i = 0; i < n && i < airports.size(); i++) {
         airports[i].print();
     }
+}
+
+// ------ AIRPORT DISTANCE -------
+double AirportManager::deg2rad(double deg) {
+    double pi = 3.141592653589;
+    return (deg * pi / 180);
+}
+
+double AirportManager::HaversineDistance(double lat1, double lon1, double lat2, double lon2) {
+
+    double R = 6371.0; // Earth radius in km
+    double lat1r, lon1r, lat2r, lon2r, u, v;
+
+    lat1r = deg2rad(lat1);
+    lon1r = deg2rad(lon1);
+    lat2r = deg2rad(lat2);
+    lon2r = deg2rad(lon2);
+    u = sin((lat2r - lat1r) / 2); // half of latitude difference    
+    v = sin((lon2r - lon1r) / 2); // half of longitude difference
+
+    return (2.0 * R * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v)));
+}
+
+bool AirportManager::getAirportByIdent(string ident, Airport& result) {
+    for (int i = 0; i < airports.size(); i++) {
+        if (airports[i].ident == ident) {
+            result = airports[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+void AirportManager::FindDistance() {
+    
+    bool found = false;
+    string id1, id2;
+    Airport a1, a2;
+
+
+    cout << "Enter the first airport ident: ";
+    cin >> id1;
+
+    if (!getAirportByIdent(id1, a1)) {
+        cout << "First airport not found!\n";
+        return;
+    }
+
+    cout << "Enter the second airport ident: ";
+    cin >> id2;
+
+    if (!getAirportByIdent(id2, a2)) {
+        cout << "Second airport not found!\n";
+        return;
+    }
+
+    double d = HaversineDistance(a1.latitude, a1.longitude, a2.latitude, a2.longitude);
+
+    cout << "The distance between " << a1.name << " and " << a2.name << " is " << d << "km\n";
+        
+
 }

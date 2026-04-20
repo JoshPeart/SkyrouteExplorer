@@ -29,6 +29,11 @@ public:
 	void sortByElevation();
 
 	void printFirstN(int n);
+
+	double deg2rad(double deg);
+	double HaversineDistance(double lat1, double lon1, double lat2, double lon2);
+	bool getAirportByIdent(string ident, Airport& result);
+	void FindDistance();
 };
 
 #endif
