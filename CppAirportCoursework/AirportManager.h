@@ -12,7 +12,7 @@ public:
 
 	// ------ FUNCTION DECLERATIONS ------
 	void loadAirports();
-	void dataSorting();
+	void advancedOptions();
 
 	void searchByCountry();
 	void searchByName();

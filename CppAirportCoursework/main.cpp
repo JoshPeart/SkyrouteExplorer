@@ -1,8 +1,4 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
 #include "AirportManager.h"
 
 
@@ -41,7 +37,7 @@ int main()
             cout << "Invalid input. Please enter a number.\n";
             continue;
         }
-        cin.ignore();
+        cin.ignore(); // Discards newline character
 
         switch (choice) {
             case 1: manager.searchByCountry(); break;
@@ -49,10 +45,10 @@ int main()
             case 3: manager.searchByIATA(); break;
             case 4: manager.countByType(); break;
             case 5: manager.addAirport(); break;
-            case 6: manager.dataSorting(); break;
+            case 6: manager.advancedOptions(); break;
             case 7: manager.saveAirports(); break;
             case 8: cout << "Exiting program...\n"; break;
-            default: cout << "\nInvalid option.Try again.\n";
+            default: cout << "\nInvalid option.Try again.\n"; // If input passes but is wrong it retries
         }
 
     } while (choice != 8); // Closes program on the number 8

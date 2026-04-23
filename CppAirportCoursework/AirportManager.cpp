@@ -18,7 +18,7 @@ void AirportManager::loadAirports() {
 
     getline(file, line); // skip header
 
-    while (getline(file, line)) {
+    while (getline(file, line)) { // Quote handling mechanism to prevent CSV parsing errors caused by commas inside airport names
         
         bool inQuotes = false;
         for (char& c : line) {
@@ -71,7 +71,7 @@ void AirportManager::loadAirports() {
 }
 
 // ------ PRINT -----
-void AirportManager::dataSorting() {
+void AirportManager::advancedOptions() {
     int choice;
 
     do {
