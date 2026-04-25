@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Airport::Airport() {
+Airport::Airport() { // Constructor sets safe default values when object is created
 	elevation_ft = 0;
 	latitude = 0;
 	longitude = 0;

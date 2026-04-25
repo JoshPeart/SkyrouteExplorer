@@ -8,12 +8,13 @@ using namespace std;
 
 int main() 
 {
-    AirportManager manager;
+    AirportManager manager; // AirportManager Object
 
     int choice = 0;
 
     cout << "Loading...\n";
 
+    // Loading airport data from CSV to vector
     manager.loadAirports();
 
     do {
@@ -31,13 +32,13 @@ int main()
 
         cin >> choice;
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(1000, '\n');
-            cout << "Invalid input. Please enter a number.\n";
-            continue;
+        if (cin.fail()) { // If it detects an invalid input
+            cin.clear(); // Resets the input
+            cin.ignore(1000, '\n'); // Deletes bad input from buffer
+            cout << "\nInvalid input. Please enter a number.\n";
+            continue; // Restarts loop
         }
-        cin.ignore(); // Discards newline character
+        cin.ignore(); // Removes leftover newline from invalid input (getline)
 
         switch (choice) {
             case 1: manager.searchByCountry(); break;

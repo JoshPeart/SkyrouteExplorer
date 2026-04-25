@@ -110,16 +110,31 @@ void AirportManager::advancedOptions() {
 }
 
 // ----- SEARCH -----
+// Can make use of maps for faster lookup
+
 void AirportManager::searchByCountry() {
     string country;
     cout << "Enter country code (e.g. GB, US): ";
     getline(cin, country);
 
+    if (country.empty()) {
+        cout << "Error: Name cannot be empty.\n";
+        return;
+    }
+
+    bool found = false;
+
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].iso_country == country) {
             airports[i].print();
+            found = true;
         }
     }
+
+    if (!found) {
+        cout << "No airports found for country code: " << country << endl;
+    }
+
 }
 
 void AirportManager::searchByName() {
@@ -127,22 +142,47 @@ void AirportManager::searchByName() {
     cout << "Enter flight name: ";
     getline(cin, Name);
 
+    if (Name.empty()) {
+        cout << "Error: Name cannot be empty.\n";
+        return;
+    }
+
+    bool found = false;
+
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].name.find(Name) != string::npos) {
             airports[i].print();
+            found = true;
         }
     }
+
+    if (!found) {
+        cout << "No airports found for name: " << Name << endl;
+    }
 }
+
 
 void AirportManager::searchByIATA() {
     string IATA;
     cout << "Enter IATA code: ";
     getline(cin, IATA);
 
+    if (IATA.empty()) {
+        cout << "Error: Name cannot be empty.\n";
+        return;
+    }
+
+    bool found = false;
+
     for (int i = 0; i < airports.size(); i++) {
         if (airports[i].iata_code == IATA) {
             airports[i].print();
+            found = true;
         }
+    }
+
+    if (!found) {
+        cout << "No airports found for IATA code: " << IATA << endl;
     }
 }
 
@@ -184,7 +224,6 @@ void AirportManager::addAirport() {
 
         cout << "Ident (local code): ";
         getline(cin, a.ident);
-        getline(cin, a.local_code);
 
         cout << "Type (e.g. large_airport): ";
         getline(cin, a.type);
@@ -216,6 +255,9 @@ void AirportManager::addAirport() {
 
         cout << "GPS Code: ";
         getline(cin, a.gps_code);
+
+        cout << "Local Code: ";
+        getline(cin, a.local_code);
 
         cout << "Latitude: ";
         getline(cin, input);
@@ -270,19 +312,23 @@ void AirportManager::saveAirports() {
 }
 
 // ------- DATA SORTING --------
+// Using lambda functions to allow custom sorting logic
 
 void AirportManager::sortByName() {
+    cout << "Sorting by name...\n\n";
     sort(airports.begin(), airports.end(), // sorts whole vector
         [](const Airport& a, const Airport& b) { return a.name < b.name; }); // comparator
     // checks if a is alphabetically less than b
 }
 
 void AirportManager::sortByCountry() {
+    cout << "Sorting by country...\n\n";
     sort(airports.begin(), airports.end(), 
         [](Airport a, Airport b) { return a.iso_country < b.iso_country; }); 
 }
 
 void AirportManager::sortByType() {
+    cout << "Sorting by type...\n\n";
     sort(airports.begin(), airports.end(),
         [](Airport a, Airport b) { return a.type < b.type; }); 
 }
@@ -290,20 +336,38 @@ void AirportManager::sortByType() {
 void AirportManager::sortByLatLon() {
     int choice;
 
-    cout << "Latitude (1) or Longitude (2): ";
-    cin >> choice;
+    while (true) {
+        cout << "Latitude (1) or Longitude (2): ";
+        cin >> choice;
 
-    if (choice == 1) {
-        sort(airports.begin(), airports.end(),
-            [](Airport a, Airport b) { return a.latitude < b.latitude; }); 
-    }
-    else if (choice == 2) {
-        sort(airports.begin(), airports.end(), 
-            [](Airport a, Airport b) { return a.longitude < b.longitude; }); 
+        // input validation
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input. Please enter 1 or 2.\n";
+            continue;
+        }
+
+        if (choice == 1) {
+            cout << "Sorting by latitude...\n\n";
+            sort(airports.begin(), airports.end(),
+                [](Airport a, Airport b) { return a.latitude < b.latitude; });
+            break;
+        }
+        else if (choice == 2) {
+            cout << "Sorting by longitude...\n\n";
+            sort(airports.begin(), airports.end(),
+                [](Airport a, Airport b) { return a.longitude < b.longitude; });
+            break;
+        }
+        else {
+            cout << "Invalid selection. Please enter 1 or 2.\n";
+        }
     }
 }
 
 void AirportManager::sortByElevation() {
+    cout << "Sorting by Elevation...\n\n";
     sort(airports.begin(), airports.end(),
         [](Airport a, Airport b) { return a.elevation_ft < b.elevation_ft; });
 }
@@ -320,6 +384,8 @@ double AirportManager::deg2rad(double deg) {
     return (deg * pi / 180);
 }
 
+// Stack overflow solution
+
 double AirportManager::HaversineDistance(double lat1, double lon1, double lat2, double lon2) {
 
     double R = 6371.0; // Earth radius in km
@@ -334,6 +400,8 @@ double AirportManager::HaversineDistance(double lat1, double lon1, double lat2, 
 
     return (2.0 * R * asin(sqrt(u * u + cos(lat1r) * cos(lat2r) * v * v)));
 }
+
+// Using a reference to avoid copying a large object
 
 bool AirportManager::getAirportByIdent(string ident, Airport& result) {
     for (int i = 0; i < airports.size(); i++) {

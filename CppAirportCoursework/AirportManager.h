@@ -4,6 +4,8 @@
 #include "Airport.h"
 #include <vector>
 
+// Can be improved by making attributes private and using getters/setters
+
 class AirportManager
 {
 private:
